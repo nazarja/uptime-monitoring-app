@@ -1,3 +1,4 @@
+const config =  require('./config.js');
 const http = require('http');
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
@@ -48,6 +49,7 @@ const server = http.createServer((req, res) => {
             payload = typeof(payload) === 'object' ? payload : {};
             payload = JSON.stringify(payload);
 
+            res.setHeader('Content-Type', 'Application/json');
             res.writeHead(statusCode);
             res.end(payload);
             console.log('RESPONSE: ', statusCode, payload);
@@ -56,10 +58,9 @@ const server = http.createServer((req, res) => {
 
 });
 
-
 /*=============================
    Port Listener
 =============================*/
 
-server.listen(3000, () => console.log('Server listening on: http://localhost:3000/'));
+server.listen(config.port, () => console.log(`Server listening on: http://localhost:${config.port}/ in ${config.env}`));
 
