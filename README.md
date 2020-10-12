@@ -8,6 +8,7 @@ An "uptime monitor" allows users to enter URLS they want monitored, and recieve 
 
 - users can sign up and sign in
 - alerts will be revieved via SMS messages
+- use OpenSSL for https support
 
 ## API
 
@@ -19,7 +20,3 @@ An "uptime monitor" allows users to enter URLS they want monitored, and recieve 
 - Edit and delete 'checks'
 - Workers perform 'checks' at appropriate times and alerts users when check state changes
 - checks run once per minute
-
-
-- Use of Twilio API for SMS sending is using hand crafted HTTP requests
-- Filesystem used to store JSON docs instead of MongoDB

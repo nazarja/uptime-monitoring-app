@@ -1,6 +1,8 @@
-const config =  require('./config.js');
+const config = require('./config.js');
 const http = require('http');
+const https = require('https');
 const url = require('url');
+const fs = require('fs');
 const { StringDecoder } = require('string_decoder');
 
 /*=============================
@@ -8,18 +10,22 @@ const { StringDecoder } = require('string_decoder');
 =============================*/
 
 const handlers = {};
-handlers.sample = (data, cb) => cb(406, {'name': 'sample handler'});
+handlers.ping = (data, cb) => cb(200);
 handlers.notfound = (data, cb) => cb(404);
 
 const router = {
-    'sample': handlers.sample
+    'ping': handlers.ping
 };
 
 /*=============================
   HTTP Server
 =============================*/
 
-const server = http.createServer((req, res) => {
+const httpServer = http.createServer((req, res) => server(req, res));
+const httpsServerOptions = { key: fs.readFileSync('./https/key.pem'), cert: fs.readFileSync('./https/cert.pem') };
+const httpsServer = https.createServer(httpsServerOptions, (req, res) => server(req, res));
+
+const server = (req, res) => {
     const parsedURL = url.parse(req.url, true);
     const path = parsedURL.pathname.replace(/^\/+|\/+$/g, '');
     const query = parsedURL.query;
@@ -32,7 +38,7 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
         buffer += decoder.end();
 
-        const routehandler = typeof(router[path]) !== 'undefined'
+        const routehandler = typeof (router[path]) !== 'undefined'
             ? router[path]
             : handlers.notfound
 
@@ -45,22 +51,21 @@ const server = http.createServer((req, res) => {
         };
 
         routehandler(data, (statusCode, payload) => {
-            statusCode = typeof(statusCode) === 'number' ? statusCode : 200;
-            payload = typeof(payload) === 'object' ? payload : {};
+            statusCode = typeof (statusCode) === 'number' ? statusCode : 200;
+            payload = typeof (payload) === 'object' ? payload : {};
             payload = JSON.stringify(payload);
 
-            res.setHeader('Content-Type', 'Application/json');
             res.writeHead(statusCode);
             res.end(payload);
             console.log('RESPONSE: ', statusCode, payload);
-        });  
+        });
     });
+};
 
-});
 
 /*=============================
    Port Listener
 =============================*/
 
-server.listen(config.port, () => console.log(`Server listening on: http://localhost:${config.port}/ in ${config.env}`));
-
+httpServer.listen(config.port.http, () => console.log(`Server listening on: http://localhost:${config.port.http}/ | ${config.env}`));
+httpsServer.listen(config.port.https, () => console.log(`Server listening on: https://localhost:${config.port.https}/ | ${config.env}`));
