@@ -1,19 +1,18 @@
-const config = require('./config.js');
+const config = require('./lib/config');
 const http = require('http');
 const https = require('https');
 const url = require('url');
 const fs = require('fs');
 const { StringDecoder } = require('string_decoder');
+const handlers = require('./lib/handlers');
+const helpers = require('./lib/helpers');
 
 /*=============================
-  Routes Handlers
+  Router
 =============================*/
 
-const handlers = {};
-handlers.ping = (data, cb) => cb(200);
-handlers.notfound = (data, cb) => cb(404);
-
 const router = {
+    'users': handlers.users,
     'ping': handlers.ping
 };
 
@@ -47,7 +46,7 @@ const server = (req, res) => {
             query,
             method,
             headers,
-            payload: buffer
+            payload: helpers.parseJsonToObject(buffer)
         };
 
         routehandler(data, (statusCode, payload) => {
