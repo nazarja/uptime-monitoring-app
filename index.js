@@ -50,6 +50,7 @@ const server = (req, res) => {
         };
 
         routehandler(data, (statusCode, payload) => {
+            console.log(data)
             statusCode = typeof (statusCode) === 'number' ? statusCode : 200;
             payload = typeof (payload) === 'object' ? payload : {};
             payload = JSON.stringify(payload);
