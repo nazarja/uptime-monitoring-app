@@ -14,6 +14,7 @@ const helpers = require('./lib/helpers');
 const router = {
     'users': handlers.users,
     'tokens': handlers.tokens,
+    'checks': handlers.checks,
     'ping': handlers.ping
 };
 
