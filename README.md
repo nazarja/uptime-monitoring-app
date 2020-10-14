@@ -1,7 +1,7 @@
 # Uptime Monitoring Application | RESTful API
 
-No Frameworks
-No Depenencies
+No Frameworks |
+No Depenencies |
 Just raw Node.js
 
 An "uptime monitor" allows users to enter URLS they want monitored, and recieve alerts when those resources "go down" or "come back online".
