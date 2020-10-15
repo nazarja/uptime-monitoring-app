@@ -9,6 +9,7 @@ An "uptime monitor" allows users to enter URLS they want monitored, and recieve 
 - users can sign up and sign in
 - alerts will be revieved via SMS messages
 - use OpenSSL for https support
+- use zlib to compress log files
 
 ## API
 
